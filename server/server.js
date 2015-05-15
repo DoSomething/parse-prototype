@@ -74,8 +74,6 @@ app.post('/poke', function(req, res) {
       }
 
       if (doc) {
-        res.send('Received poke for ' + doc.name + '@' + doc.installation_id);
-
         body = {
           where: {
             installationId: doc.installation_id
@@ -99,9 +97,11 @@ app.post('/poke', function(req, res) {
         request.post(options, function(err, httpResponse, body) {
           console.log(body);
         });
+
+        res.send({message: 'Received poke for ' + doc.name + '@' + doc.installation_id});
       }
       else {
-        res.status(404).send('User ' + to + 'not found.');
+        res.status(404).send({message: 'User ' + to + 'not found.'});
       }
     }
   );
