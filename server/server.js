@@ -1,6 +1,10 @@
+var PARSE_APP_ID = 'PrEnANMldxheFLyqIlT7gfGYdD23UrgGKsArgBu4';
+var PARSE_API_KEY = 'JoHlyxXXXTkucrE6vrwfjPvTzBxal3TsUP92R2az';
+
 var express = require('express')
   , bodyparser = require('body-parser')
   , mongoose = require('mongoose')
+  , request = require('request')
   ;
 
 var app = express();
@@ -52,8 +56,54 @@ app.post('/users', function(req, res) {
 });
 
 app.post('/poke', function(req, res) {
-  // @todo send notification to the user poked
-  res.send('poke received');
+  var user = mongoose.model('User', userSchema);
+  var from = req.body.from;
+  var to = req.body.to;
+
+  user.findOne(
+    {name: to},  // condition
+    function(err, doc) {  // callback
+      var url = 'https://api.parse.com/1/push';
+      var body,
+          options;
+
+      if (err) {
+        res.send(err);
+        return;
+      }
+
+      if (doc) {
+        res.send('Received poke for ' + doc.name + '@' + doc.installation_id);
+
+        body = {
+          where: {
+            installationId: doc.installation_id
+          },
+          data: {
+            alert: 'You\'ve been poked by ' + from + '!'
+          }
+        };
+
+        options = {
+          url: url,
+          headers: {
+            'X-Parse-Application-Id': PARSE_APP_ID,
+            'X-Parse-REST-API-Key': PARSE_API_KEY
+          },
+          json: true,
+          body: body
+        };
+        console.log(options);
+
+        request.post(options, function(err, httpResponse, body) {
+          console.log(body);
+        });
+      }
+      else {
+        res.status(404).send('User ' + to + 'not found.');
+      }
+    }
+  );
 });
 
 var server = app.listen(3000, function() {
