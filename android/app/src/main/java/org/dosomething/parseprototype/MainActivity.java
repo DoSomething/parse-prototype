@@ -25,6 +25,8 @@ import org.json.JSONObject;
 
 public class MainActivity extends Activity implements View.OnClickListener {
 
+    private static final String TAG = "ParsePrototype";
+
     // Server url
     private String mServerUrl;
 
@@ -59,8 +61,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
     public void onClick(View view) {
 
         if (view.getId() == R.id.name_button) {
-            String name = mEditNameView.getText().toString();
             String url = mServerUrl + "/users";
+            String name = mEditNameView.getText().toString();
 
             ParseInstallation parseInstall = ParseInstallation.getCurrentInstallation();
             String installationId = parseInstall.getString("installationId");
@@ -80,7 +82,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 // eh, let's just not let this happen...
             }
 
-            Response.Listener<JSONObject> onSuccess = new Response.Listener<JSONObject>(){
+            Response.Listener<JSONObject> onSuccess = new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
                     Toast.makeText(MainActivity.this, "Success", Toast.LENGTH_SHORT).show();
@@ -91,6 +93,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Toast.makeText(MainActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, error.getMessage());
                 }
             };
 
@@ -98,9 +101,36 @@ public class MainActivity extends Activity implements View.OnClickListener {
             mQueue.add(request);
         }
         else if (view.getId() == R.id.poke_button) {
+            String url = mServerUrl + "/poke";
             String from = mEditNameView.getText().toString();
             String to = mEditPokeView.getText().toString();
-            Toast.makeText(this, "TODO: Send poke from " + from + " to " + to, Toast.LENGTH_SHORT).show();
+
+            JSONObject body = new JSONObject();
+            try {
+                body.put("from", from);
+                body.put("to", to);
+            }
+            catch (Exception e) {
+                // eh, let's also just not let this happen..
+            }
+
+            Response.Listener<JSONObject> onSuccess = new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    Toast.makeText(MainActivity.this, "Poke sent", Toast.LENGTH_SHORT).show();
+                }
+            };
+
+            Response.ErrorListener onError = new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(MainActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, error.getMessage());
+                }
+            };
+
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, body, onSuccess, onError);
+            mQueue.add(request);
         }
 
     }
