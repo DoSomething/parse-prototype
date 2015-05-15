@@ -28,7 +28,8 @@
     <TextView android:id="@+id/poke_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
+        android:layout_below="@id/name_button"
+        android:layout_marginTop="32dp"
         android:gravity="center"
         android:text="Poke a person" />
     <EditText android:id="@+id/poke_edit"
