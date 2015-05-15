@@ -8,9 +8,10 @@ var express = require('express')
   ;
 
 var app = express();
+app.set('port', (process.env.PORT || 5000));
 app.use(bodyparser.json());
 
-var dbUri = process.env.DB_URI || 'mongodb://localhost/parse-prototype';
+var dbUri = process.env.DB_URI || process.env.MONGOLAB_URI || 'mongodb://localhost/parse-prototype';
 mongoose.connect(dbUri);
 
 var userSchema = mongoose.Schema({
@@ -106,9 +107,8 @@ app.post('/poke', function(req, res) {
   );
 });
 
-var server = app.listen(3000, function() {
-  var host = server.address().address;
-  var port = server.address().port;
+var server = app.listen(app.get('port'), function() {
+  
+  console.log('\n\n\tParse prototype server listening on port: %s\n\n', app.get('port'));
 
-  console.log('\n\n\tParse prototype server listening at http://%s:%s\n\n', host, port);
 });

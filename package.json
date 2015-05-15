@@ -1,0 +1,14 @@
+{
+  "name": "parse-prototype-server",
+  "version": "0.0.1",
+  "description": "Simple server for a DoSomething.org Parse prototype.",
+  "main": "server/server.js",
+  "author": "Jonathan Uy",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.12.4",
+    "express": "^4.12.3",
+    "mongoose": "^4.0.3",
+    "request": "^2.55.0"
+  }
+}
