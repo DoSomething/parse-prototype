@@ -14,6 +14,10 @@ var userSchema = mongoose.Schema({
   device_token: String
 });
 
+app.get('/', function(req, res) {
+  res.send('Hello!');
+});
+
 app.post('/users', function(req, res) {
   var user = mongoose.model('User', userSchema);
   user.findOneAndUpdate(
@@ -22,16 +26,20 @@ app.post('/users', function(req, res) {
     {upsert: true, select: {name: 1}},  // options
     function(err, doc) {    // callback
       var response;
-      console.log(doc);
+      if (err) {
+        res.send(err);
+        return;
+      }
+
       if (doc) {
         response = {
-          message: 'user created',
+          message: 'user updated',
           data: doc
         };
         res.send(response);
       }
       else {
-        res.send(err);
+        res.send({message: 'user created'});
       }
     }
   );
