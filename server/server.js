@@ -11,7 +11,8 @@ mongoose.connect(dbUri);
 
 var userSchema = mongoose.Schema({
   name: String,
-  device_token: String
+  installation_id: String,
+  device_type: String
 });
 
 app.get('/', function(req, res) {
@@ -22,7 +23,11 @@ app.post('/users', function(req, res) {
   var user = mongoose.model('User', userSchema);
   user.findOneAndUpdate(
     {name: req.body.name},  // condition
-    {name: req.body.name},  // update
+    {                       // update
+      name: req.body.name,
+      installation_id: req.body.installation_id,
+      device_type: req.body.device_type
+    },
     {upsert: true, select: {name: 1}},  // options
     function(err, doc) {    // callback
       var response;

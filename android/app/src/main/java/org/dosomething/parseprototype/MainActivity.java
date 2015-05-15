@@ -3,6 +3,7 @@ package org.dosomething.parseprototype;
 import android.app.Activity;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,6 +17,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.parse.Parse;
+import com.parse.ParseInstallation;
 
 import org.json.JSONObject;
 
@@ -58,9 +61,20 @@ public class MainActivity extends Activity implements View.OnClickListener {
         if (view.getId() == R.id.name_button) {
             String name = mEditNameView.getText().toString();
             String url = mServerUrl + "/users";
+
+            ParseInstallation parseInstall = ParseInstallation.getCurrentInstallation();
+            String installationId = parseInstall.getString("installationId");
+            String deviceType = parseInstall.getString("deviceType");
+
+            String deviceToken = parseInstall.getString("deviceToken");
+            String gcmSenderId = parseInstall.getString("GCMSenderId");
+            Log.d("Parse", "deviceToken: " + deviceToken + " // GCMSenderId: " + gcmSenderId);
+
             JSONObject body = new JSONObject();
             try {
                 body.put("name", name);
+                body.put("installation_id", installationId);
+                body.put("device_type", deviceType);
             }
             catch (Exception e) {
                 // eh, let's just not let this happen...
@@ -88,5 +102,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
             String to = mEditPokeView.getText().toString();
             Toast.makeText(this, "TODO: Send poke from " + from + " to " + to, Toast.LENGTH_SHORT).show();
         }
+
     }
 }
