@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="server_url">http://192.168.1.83:3000</string>
+    <string name="server_url">http://ds-parse-prototype.herokuapp.com</string>
     <string name="parse_app_id">PrEnANMldxheFLyqIlT7gfGYdD23UrgGKsArgBu4</string>
     <string name="parse_client_key">nzKrC3sXWYcsBlBTN66M8PKTDT10GViS3u9a9QLn</string>
 </resources>
