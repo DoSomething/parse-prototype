@@ -1,2 +1,16 @@
+.DS_Store
+
 ## Node Server
 node_modules/
+
+## Android
+*.apk
+*.class
+*.dex
+*.iml
+.gradle
+.idea
+android/local.properties
+android/*/bin/
+android/*/gen/
+android/*/build/
