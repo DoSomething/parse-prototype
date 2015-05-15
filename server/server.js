@@ -27,14 +27,14 @@ app.get('/', function(req, res) {
 app.post('/users', function(req, res) {
   var user = mongoose.model('User', userSchema);
   user.findOneAndUpdate(
-    {name: req.body.name},  // condition
-    {                       // update
+    {name: req.body.name.toLowerCase()},  // condition
+    {                                     // update
       name: req.body.name,
       installation_id: req.body.installation_id,
       device_type: req.body.device_type
     },
-    {upsert: true, select: {name: 1}},  // options
-    function(err, doc) {    // callback
+    {upsert: true, select: {name: 1}},    // options
+    function(err, doc) {                  // callback
       var response;
       if (err) {
         res.send(err);
@@ -59,7 +59,7 @@ app.post('/users', function(req, res) {
 app.post('/poke', function(req, res) {
   var user = mongoose.model('User', userSchema);
   var from = req.body.from;
-  var to = req.body.to;
+  var to = req.body.to.toLowerCase();
 
   user.findOne(
     {name: to},  // condition
@@ -101,7 +101,7 @@ app.post('/poke', function(req, res) {
         res.send({message: 'Received poke for ' + doc.name + '@' + doc.installation_id});
       }
       else {
-        res.status(404).send({message: 'User ' + to + 'not found.'});
+        res.status(404).send({message: 'User ' + to + ' not found.'});
       }
     }
   );
