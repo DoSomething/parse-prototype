@@ -10,14 +10,29 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONObject;
+
 
 public class MainActivity extends Activity implements View.OnClickListener {
+
+    // Server url
+    private String mServerUrl;
 
     // References to UI elements
     private EditText mEditNameView;
     private EditText mEditPokeView;
     private Button mNameButton;
     private Button mPokeButton;
+
+    // Queue for Volley requests
+    private RequestQueue mQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,13 +46,42 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         mNameButton.setOnClickListener(this);
         mPokeButton.setOnClickListener(this);
+
+        mQueue = Volley.newRequestQueue(this);
+
+        mServerUrl = getResources().getString(R.string.server_url);
     }
 
     @Override
     public void onClick(View view) {
+
         if (view.getId() == R.id.name_button) {
             String name = mEditNameView.getText().toString();
-            Toast.makeText(this, "TODO: Update server with name: " + name, Toast.LENGTH_SHORT).show();
+            String url = mServerUrl + "/users";
+            JSONObject body = new JSONObject();
+            try {
+                body.put("name", name);
+            }
+            catch (Exception e) {
+                // eh, let's just not let this happen...
+            }
+
+            Response.Listener<JSONObject> onSuccess = new Response.Listener<JSONObject>(){
+                @Override
+                public void onResponse(JSONObject response) {
+                    Toast.makeText(MainActivity.this, "Success", Toast.LENGTH_SHORT).show();
+                }
+            };
+
+            Response.ErrorListener onError = new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(MainActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                }
+            };
+
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, body, onSuccess, onError);
+            mQueue.add(request);
         }
         else if (view.getId() == R.id.poke_button) {
             String from = mEditNameView.getText().toString();
