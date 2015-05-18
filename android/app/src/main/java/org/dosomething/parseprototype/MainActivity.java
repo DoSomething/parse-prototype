@@ -22,6 +22,8 @@ import com.parse.ParseInstallation;
 
 import org.json.JSONObject;
 
+import java.util.Random;
+
 
 public class MainActivity extends Activity implements View.OnClickListener {
 
@@ -32,9 +34,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     // References to UI elements
     private EditText mEditNameView;
-    private EditText mEditPokeView;
+    private EditText mEditNotifyView;
     private Button mNameButton;
+    private Button mPuppetButton;
     private Button mPokeButton;
+    private Button mNumberButton;
 
     // Queue for Volley requests
     private RequestQueue mQueue;
@@ -45,12 +49,16 @@ public class MainActivity extends Activity implements View.OnClickListener {
         setContentView(R.layout.activity_main);
 
         mEditNameView = (EditText)findViewById(R.id.name_edit);
-        mEditPokeView = (EditText)findViewById(R.id.poke_edit);
+        mEditNotifyView = (EditText)findViewById(R.id.notify_edit);
         mNameButton = (Button)findViewById(R.id.name_button);
+        mPuppetButton = (Button)findViewById(R.id.puppet_button);
         mPokeButton = (Button)findViewById(R.id.poke_button);
+        mNumberButton = (Button)findViewById(R.id.number_button);
 
         mNameButton.setOnClickListener(this);
+        mPuppetButton.setOnClickListener(this);
         mPokeButton.setOnClickListener(this);
+        mNumberButton.setOnClickListener(this);
 
         mQueue = Volley.newRequestQueue(this);
 
@@ -60,7 +68,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
     @Override
     public void onClick(View view) {
 
-        if (view.getId() == R.id.name_button) {
+        int id = view.getId();
+        if (id == R.id.name_button) {
             String url = mServerUrl + "/users";
             String name = mEditNameView.getText().toString();
 
@@ -100,15 +109,27 @@ public class MainActivity extends Activity implements View.OnClickListener {
             JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, body, onSuccess, onError);
             mQueue.add(request);
         }
-        else if (view.getId() == R.id.poke_button) {
-            String url = mServerUrl + "/poke";
+        else if (id == R.id.puppet_button || id == R.id.poke_button || id == R.id.number_button) {
+            String url = mServerUrl + "/notify";
             String from = mEditNameView.getText().toString();
-            String to = mEditPokeView.getText().toString();
+            String to = mEditNotifyView.getText().toString();
 
             JSONObject body = new JSONObject();
             try {
                 body.put("from", from);
                 body.put("to", to);
+
+                if (id == R.id.puppet_button) {
+                    body.put("notificationType", "puppet");
+                }
+                else if (id == R.id.poke_button) {
+                    body.put("notificationType", "poke");
+                }
+                else if (id == R.id.number_button) {
+                    body.put("notificationType", "number");
+                    Random random = new Random();
+                    body.put("number", random.nextInt());
+                }
             }
             catch (Exception e) {
                 // eh, let's also just not let this happen..
@@ -117,7 +138,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
             Response.Listener<JSONObject> onSuccess = new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
-                    Toast.makeText(MainActivity.this, "Poke sent", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Notification sent", Toast.LENGTH_SHORT).show();
                 }
             };
 

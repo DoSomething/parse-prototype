@@ -20,16 +20,30 @@ var userSchema = mongoose.Schema({
   device_type: String
 });
 
+/**
+ * GET /
+ */
 app.get('/', function(req, res) {
   res.send('Hello!');
 });
 
+/**
+ * GET /number
+ */
+app.get('/number/:number', function(req, res) {
+  var num = req.params.number;
+  res.send('The number ' + num + '!');
+});
+
+/**
+ * POST /users
+ */
 app.post('/users', function(req, res) {
   var user = mongoose.model('User', userSchema);
   user.findOneAndUpdate(
     {name: req.body.name.toLowerCase()},  // condition
     {                                     // update
-      name: req.body.name,
+      name: req.body.name.toLowerCase(),
       installation_id: req.body.installation_id,
       device_type: req.body.device_type
     },
@@ -56,17 +70,23 @@ app.post('/users', function(req, res) {
   
 });
 
-app.post('/poke', function(req, res) {
+/**
+ * POST /poke
+ */
+app.post('/notify', function(req, res) {
   var user = mongoose.model('User', userSchema);
   var from = req.body.from;
   var to = req.body.to.toLowerCase();
+  var notificationType = req.body.notificationType;
+  var number = req.body.number || null;
 
   user.findOne(
     {name: to},  // condition
     function(err, doc) {  // callback
       var url = 'https://api.parse.com/1/push';
       var body,
-          options;
+          options,
+          message;
 
       if (err) {
         res.send(err);
@@ -78,10 +98,34 @@ app.post('/poke', function(req, res) {
           where: {
             installationId: doc.installation_id
           },
-          data: {
-            alert: 'You\'ve been poked by ' + from + '!'
-          }
+          data: {}
         };
+
+        if (notificationType == 'poke') {
+          message = 'You\'ve been poked by ' + from + '!';
+
+          if (doc.device_type == 'android') {
+            body.data.title = 'A Poke!';
+          }
+        }
+        else if (notificationType == 'puppet') {
+          message = 'Here\'s a puppet!'
+
+          if (doc.device_type == 'android') {
+            body.data.title = 'A Puppet!';
+            body.data.uri = 'parseprototype://PuppetSlothActivity';
+          }
+        }
+        else if (notificationType == 'number') {
+          message = 'Checkout this number ' + number + '!';
+
+          if (doc.device_type == 'android') {
+            body.data.title = 'A Number!'
+            body.data.uri = 'parseprototype://NumberActivity?number=' + number;
+          }
+        }
+
+        body.data.alert = message;
 
         options = {
           url: url,
@@ -92,13 +136,13 @@ app.post('/poke', function(req, res) {
           json: true,
           body: body
         };
-        console.log(options);
+        console.log(options, "\n");
 
         request.post(options, function(err, httpResponse, body) {
-          console.log(body);
+          console.log(body, '\n');
         });
 
-        res.send({message: 'Received poke for ' + doc.name + '@' + doc.installation_id});
+        res.send({message: notificationType + ' notify for ' + doc.name + '@' + doc.installation_id});
       }
       else {
         res.status(404).send({message: 'User ' + to + ' not found.'});
@@ -107,6 +151,9 @@ app.post('/poke', function(req, res) {
   );
 });
 
+/**
+ * Start listening for requests
+ */
 var server = app.listen(app.get('port'), function() {
   
   console.log('\n\n\tParse prototype server listening on port: %s\n\n', app.get('port'));

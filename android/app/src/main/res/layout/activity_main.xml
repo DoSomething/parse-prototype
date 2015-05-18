@@ -25,24 +25,38 @@
         android:gravity="center"
         android:text="Submit" />
 
-    <TextView android:id="@+id/poke_title"
+    <TextView android:id="@+id/notify_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/name_button"
         android:layout_marginTop="32dp"
         android:gravity="center"
-        android:text="Poke a person" />
-    <EditText android:id="@+id/poke_edit"
+        android:text="Notify a person" />
+    <EditText android:id="@+id/notify_edit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/poke_title"
+        android:layout_below="@id/notify_title"
         android:gravity="center" />
+    <Button android:id="@+id/puppet_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/notify_edit"
+        android:gravity="center"
+        android:text="Puppet!" />
     <Button android:id="@+id/poke_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/poke_edit"
+        android:layout_below="@id/notify_edit"
         android:gravity="center"
         android:text="Poke em!" />
+    <Button android:id="@+id/number_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/notify_edit"
+        android:gravity="center"
+        android:text="Number?" />
 
 </RelativeLayout>
