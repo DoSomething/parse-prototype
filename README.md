@@ -47,11 +47,16 @@ TBD
 
 For our purposes, using Parse seems like a feasible approach. Parse is implemented on the Android app to identify the unique devices for push and to handle the receiving of push notifications. On the server side, for sending push notifications we can use the Parse Rest API for configuring and triggering targeted push notifications.
 
+What the notifications look like in the Android notification drawer:
+
+![Android Notification Drawer](https://raw.githubusercontent.com/DoSomething/parse-prototype/master/notifications.png)
+
 > What's the bare minimum of data we'd need to log from mobile app users to send targeted push notifications?
 
 For each user we'll want to save the device type and the installation ID:
 
 **Android:**
+
 ```
 ParseInstallation parseInstall = ParseInstallation.getCurrentInstallation();
 String installationId = parseInstall.getString("installationId");
@@ -61,7 +66,8 @@ String deviceType = parseInstall.getString("deviceType");
 > How can we customize the title and message and behavior of opening a push notifications?
 
 **Android:**
-On requests made to the Rest API to send out a push, the device-specific installation id is used to identify who to push to. The `title` and `alert` can be set in the request body to customize the title and message that show up in the notification tray. And the `uri` can be set to indicate how the app should handle opening a notification.
+
+On requests made to the Rest API to send out a push, the device-specific installation id is used to identify who to push to. The `title` and `alert` can be set in the request body to customize the title and message that show up in the notification drawer. And the `uri` can be set to indicate how the app should handle opening a notification.
 
 An example request made to the Rest API could look like:
 
