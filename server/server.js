@@ -128,10 +128,10 @@ app.post('/notify', function(req, res) {
           json: true,
           body: body
         };
-        console.log(options, "\n");
+        console.log("Request:", options);
 
         request.post(options, function(err, httpResponse, body) {
-          console.log(body, '\n');
+          console.log("Response:", body);
         });
 
         res.send({message: notificationType + ' notify for ' + doc.name + '@' + doc.installation_id});

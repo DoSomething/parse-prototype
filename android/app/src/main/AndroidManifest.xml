@@ -36,11 +36,21 @@
             android:name=".PuppetSlothActivity"
             android:label="@string/title_activity_puppet_sloth"
             android:parentActivityName=".MainActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="parseprototype" android:host="PuppetSlothActivity"/>
+            </intent-filter>
         </activity>
         <activity
             android:name=".NumberActivity"
             android:label="@string/title_activity_number"
             android:parentActivityName=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="parseprototype" android:host="NumberActivity"/>
+            </intent-filter>
         </activity>
 
         <!-- Stuff for Parse -->
