@@ -39,7 +39,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <data android:scheme="parseprototype" android:host="PuppetSlothActivity"/>
+                <data android:scheme="parseprototype" android:host="puppet"/>
             </intent-filter>
         </activity>
         <activity
@@ -49,7 +49,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <data android:scheme="parseprototype" android:host="NumberActivity"/>
+                <data android:scheme="parseprototype" android:host="number"/>
             </intent-filter>
         </activity>
 

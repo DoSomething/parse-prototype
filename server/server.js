@@ -105,7 +105,7 @@ app.post('/notify', function(req, res) {
 
           if (doc.device_type == 'android') {
             body.data.title = 'A Puppet!';
-            body.data.uri = 'parseprototype://PuppetSlothActivity';
+            body.data.uri = 'parseprototype://puppet';
           }
         }
         else if (notificationType == 'number') {
@@ -113,7 +113,7 @@ app.post('/notify', function(req, res) {
 
           if (doc.device_type == 'android') {
             body.data.title = 'A Number!'
-            body.data.uri = 'parseprototype://NumberActivity?number=' + number;
+            body.data.uri = 'parseprototype://number?number=' + number;
           }
         }
 
