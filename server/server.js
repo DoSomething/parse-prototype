@@ -28,14 +28,6 @@ app.get('/', function(req, res) {
 });
 
 /**
- * GET /number
- */
-app.get('/number/:number', function(req, res) {
-  var num = req.params.number;
-  res.send('The number ' + num + '!');
-});
-
-/**
  * POST /users
  */
 app.post('/users', function(req, res) {
